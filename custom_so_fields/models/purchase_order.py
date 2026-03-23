@@ -1,0 +1,16 @@
+from odoo import fields, models
+
+
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+
+    x_original_customer = fields.Char(string='Original Customer')
+    x_original_ship_date = fields.Date(string='Original Ship Date')
+    x_original_cancel_date = fields.Date(string='Original Cancel Date')
+
+    def _prepare_invoice(self):
+        vals = super()._prepare_invoice()
+        vals['x_original_customer'] = self.x_original_customer
+        vals['x_original_ship_date'] = self.x_original_ship_date
+        vals['x_original_cancel_date'] = self.x_original_cancel_date
+        return vals

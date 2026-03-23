@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_conway_fields_purchase" model="ir.ui.view">
+        <field name="name">purchase.order.form.conway.fields</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_original_customer" string="Original Customer"/>
+                <field name="x_original_ship_date" string="Original Ship Date"/>
+                <field name="x_original_cancel_date" string="Original Cancel Date"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
