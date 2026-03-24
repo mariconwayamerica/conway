@@ -19,6 +19,10 @@
                         <span t-field="order.x_original_cancel_date"
                               t-options='{"widget": "date"}'/><br/>
                     </t>
+                    <t t-if="order.x_original_customer_shipping_address">
+                        <strong>Original Customer Shipping Address:</strong>
+                        <span t-field="order.x_original_customer_shipping_address"/><br/>
+                    </t>
                 </div>
             </div>
         </xpath>

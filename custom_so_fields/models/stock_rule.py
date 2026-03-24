@@ -12,4 +12,5 @@ class StockRule(models.Model):
             vals['x_original_customer'] = so.x_original_customer
             vals['x_original_ship_date'] = so.x_original_ship_date
             vals['x_original_cancel_date'] = so.x_original_cancel_date
+            vals['x_original_customer_shipping_address'] = so.x_original_customer_shipping_address
         return vals
