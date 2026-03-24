@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_move_form_conway_fields" model="ir.ui.view">
-        <field name="name">account.move.form.conway.fields</field>
+    <record id="view_move_form_custom_so_fields" model="ir.ui.view">
+        <field name="name">account.move.form.custom.so.fields</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//group[@id='header_left_group']" position="inside">
                 <field name="x_original_customer" string="Original Customer"/>
                 <field name="x_original_ship_date" string="Original Ship Date"/>
                 <field name="x_original_cancel_date" string="Original Cancel Date"/>
