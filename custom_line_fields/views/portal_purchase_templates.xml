@@ -3,44 +3,28 @@
     <template id="portal_purchase_order_custom_line_fields"
               inherit_id="purchase.purchase_order_portal_content">
 
-        <!-- Add extra column headers after the product description th -->
-        <xpath expr="//thead//th[hasclass('text-start')]" position="after">
+        <!-- Add column headers -->
+        <xpath expr="//th[hasclass('text-start')]" position="after">
             <th class="text-start">Factory Style #</th>
             <th class="text-start">Item Display Name</th>
             <th class="text-start">Color Code</th>
             <th class="text-start">Brand</th>
             <th class="text-start">Collection</th>
             <th class="text-start">Towel Type</th>
-            <th class="text-start">General Notes</th>
             <th class="text-start">Sales Description</th>
+            <th class="text-start">General Notes</th>
         </xpath>
 
-        <!-- Add extra data cells in each line row after the description td -->
-        <xpath expr="//tbody//td[hasclass('text-start')]" position="after">
-            <td class="text-start">
-                <span t-esc="line.x_factory_style_number"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_item_display_name"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_color_code"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_brand"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_collection"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_towel_type"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_general_notes"/>
-            </td>
-            <td class="text-start">
-                <span t-esc="line.x_sales_description"/>
-            </td>
+        <!-- Add column data cells -->
+        <xpath expr="//td[@id='product_name']" position="after">
+            <td><span t-esc="line.x_factory_style_number or ''"/></td>
+            <td><span t-esc="line.x_item_display_name or ''"/></td>
+            <td><span t-esc="line.x_color_code or ''"/></td>
+            <td><span t-esc="line.x_brand or ''"/></td>
+            <td><span t-esc="line.x_collection or ''"/></td>
+            <td><span t-esc="line.x_towel_type or ''"/></td>
+            <td><span t-esc="line.x_sales_description or ''"/></td>
+            <td><span t-esc="line.x_general_notes or ''"/></td>
         </xpath>
 
     </template>
