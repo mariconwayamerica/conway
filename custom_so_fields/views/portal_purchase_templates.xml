@@ -9,6 +9,10 @@
                         <strong>Original Customer:</strong>
                         <span t-esc="order.x_original_customer"/><br/>
                     </t>
+                    <t t-if="order.x_original_customer_po_number">
+                        <strong>Original Customer PO Number:</strong>
+                        <span t-field="order.x_original_customer_po_number"/><br/>
+                    </t>
                     <t t-if="order.x_original_ship_date">
                         <strong>Original Ship Date:</strong>
                         <span t-field="order.x_original_ship_date"

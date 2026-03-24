@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@id='header_left_group']" position="inside">
                 <field name="x_original_customer" string="Original Customer"/>
+                <field name="x_original_customer_po_number" string="Original Customer PO Number"/>
                 <field name="x_original_ship_date" string="Original Ship Date"/>
                 <field name="x_original_cancel_date" string="Original Cancel Date"/>
                 <field name="x_original_customer_shipping_address" string="Original Customer Shipping Address"/>
