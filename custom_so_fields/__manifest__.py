@@ -1,6 +1,6 @@
 {
     'name': 'Custom SO Fields',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.0.2',
     'summary': 'add custom fields to so po invoice vb',
     'category': 'Sales',
     'author': 'Conway',

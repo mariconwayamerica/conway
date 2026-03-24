@@ -5,28 +5,18 @@
         <xpath expr="//div[@id='informations']" position="inside">
             <div class="row mt-3">
                 <div class="col-lg-6">
-                    <t t-if="order.x_original_customer">
-                        <strong>Original Customer:</strong>
-                        <span t-esc="order.x_original_customer"/><br/>
-                    </t>
-                    <t t-if="order.x_original_customer_po_number">
-                        <strong>Original Customer PO Number:</strong>
-                        <span t-field="order.x_original_customer_po_number"/><br/>
-                    </t>
-                    <t t-if="order.x_original_ship_date">
-                        <strong>Original Ship Date:</strong>
-                        <span t-field="order.x_original_ship_date"
-                              t-options='{"widget": "date"}'/><br/>
-                    </t>
-                    <t t-if="order.x_original_cancel_date">
-                        <strong>Original Cancel Date:</strong>
-                        <span t-field="order.x_original_cancel_date"
-                              t-options='{"widget": "date"}'/><br/>
-                    </t>
-                    <t t-if="order.x_original_customer_shipping_address">
-                        <strong>Original Customer Shipping Address:</strong>
-                        <span t-field="order.x_original_customer_shipping_address"/><br/>
-                    </t>
+                    <strong>Original Customer:</strong>
+                    <span t-esc="order.x_original_customer"/><br/>
+                    <strong>Original Customer PO Number:</strong>
+                    <span t-field="order.x_original_customer_po_number"/><br/>
+                    <strong>Original Ship Date:</strong>
+                    <span t-field="order.x_original_ship_date"
+                          t-options='{"widget": "date"}'/><br/>
+                    <strong>Original Cancel Date:</strong>
+                    <span t-field="order.x_original_cancel_date"
+                          t-options='{"widget": "date"}'/><br/>
+                    <strong>Original Customer Shipping Address:</strong>
+                    <span t-field="order.x_original_customer_shipping_address"/><br/>
                 </div>
             </div>
         </xpath>
