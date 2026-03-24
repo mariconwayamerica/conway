@@ -6,7 +6,7 @@ class StockRule(models.Model):
 
     def _prepare_purchase_order(self, company_id, origins, values):
         vals = super()._prepare_purchase_order(company_id, origins, values)
-        so = values.get('reference_ids') and values['reference_ids'].sale_ids[:1]
+        so = values[0].get('reference_ids') and values[0]['reference_ids'].sale_ids[:1]
         if so:
             vals['x_original_customer'] = so.x_original_customer
             vals['x_original_customer_po_number'] = so.x_original_customer_po_number
