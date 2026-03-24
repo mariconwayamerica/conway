@@ -4,7 +4,7 @@
     'summary': 'add custom fields to so po invoice vb',
     'category': 'Sales',
     'author': 'Conway',
-    'depends': ['sale', 'purchase', 'account', 'stock', 'purchase_portal'],
+    'depends': ['sale', 'purchase', 'account', 'stock',],
     'data': [
         'views/sale_order_views.xml',
         'views/purchase_order_views.xml',
