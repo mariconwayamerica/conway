@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_custom_line_fields" model="ir.ui.view">
+        <field name="name">account.move.form.custom.line.fields</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add columns to the invoice_line_ids tree inside the invoice form -->
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='product_id']" position="after">
+                <field name="x_factory_style_number" string="Factory Style #" optional="show"/>
+                <field name="x_item_display_name" string="Item Display Name" optional="show"/>
+                <field name="x_general_notes" string="General Notes" optional="show"/>
+                <field name="x_color_code" string="Color Code" optional="show"/>
+                <field name="x_brand" string="Brand" optional="show"/>
+                <field name="x_collection" string="Collection" optional="show"/>
+                <field name="x_towel_type" string="Towel Type" optional="show"/>
+                <field name="x_sales_description" string="Sales Description" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
