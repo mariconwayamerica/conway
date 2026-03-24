@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_purchase_order_custom_fields"
+              inherit_id="purchase.purchase_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <div class="row mt-3">
+                <div class="col-lg-6">
+                    <strong>Original Customer:</strong>
+                    <span t-esc="order.x_original_customer"/><br/>
+                    <strong>Original Customer PO Number:</strong>
+                    <span t-field="order.x_original_customer_po_number"/><br/>
+                    <strong>Original Ship Date:</strong>
+                    <span t-field="order.x_original_ship_date"
+                          t-options='{"widget": "date"}'/><br/>
+                    <strong>Original Cancel Date:</strong>
+                    <span t-field="order.x_original_cancel_date"
+                          t-options='{"widget": "date"}'/><br/>
+                    <strong>Original Customer Shipping Address:</strong>
+                    <span t-field="order.x_original_customer_shipping_address"/><br/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

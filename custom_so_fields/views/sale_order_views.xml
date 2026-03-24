@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_custom_so_fields" model="ir.ui.view">
+        <field name="name">custom.so.fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_original_customer" string="Original Customer"/>
+                <field name="x_original_customer_po_number" string="Original Customer PO Number"/>
+                <field name="x_original_ship_date" string="Original Ship Date"/>
+                <field name="x_original_cancel_date" string="Original Cancel Date"/>
+                <field name="x_original_customer_shipping_address" string="Original Customer Shipping Address"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
