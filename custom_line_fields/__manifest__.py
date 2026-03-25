@@ -1,7 +1,7 @@
 {
-    'name': 'Custom SO Fields',
-    'version': '19.0.1.0.2',
-    'summary': 'add custom fields to so po invoice vb',
+    'name': 'Custom Line Fields',
+    'version': '19.0.1.0.0',
+    'summary': 'Add custom line-level fields to SO, PO, and Invoice lines',
     'category': 'Sales',
     'author': 'Conway',
     'depends': ['sale', 'purchase', 'account', 'stock'],

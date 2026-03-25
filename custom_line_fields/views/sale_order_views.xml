@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.custom_line_fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//field[@name='product_template_id']" position="after">
+                <field name="x_factory_style_number" string="Factory Style #" optional="show"/>
+                <field name="x_item_display_name" string="Item Display Name" optional="show"/>
+                <field name="x_general_notes" string="General Notes" optional="show"/>
+                <field name="x_color_code" string="Color Code" optional="show"/>
+                <field name="x_brand" string="Brand" optional="show"/>
+                <field name="x_collection" string="Collection" optional="show"/>
+                <field name="x_towel_type" string="Towel Type" optional="show"/>
+                <field name="x_sales_description" string="Sales Description" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
