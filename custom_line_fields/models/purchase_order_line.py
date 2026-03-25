@@ -1,10 +1,6 @@
-import logging
-
 from odoo import api, fields, models
 
 from ._constants import LINE_FIELDS
-
-_logger = logging.getLogger(__name__)
 
 
 class PurchaseOrderLine(models.Model):
@@ -19,49 +15,43 @@ class PurchaseOrderLine(models.Model):
     x_towel_type = fields.Char(string='Towel Type')
     x_sales_description = fields.Char(string='Sales Description')
 
-    def _sync_fields_from_sale_line(self, sale_line):
-        """Copy custom line fields from a sale order line if not already set."""
-        sync_vals = {
-            f: sale_line[f]
-            for f in LINE_FIELDS
-            if sale_line[f] and not self[f]
-        }
-        if sync_vals:
-            super(PurchaseOrderLine, self).write(sync_vals)
+    def _get_sale_line_from_move_dest(self, vals):
+        """Resolve the originating sale.order.line via move_dest_ids."""
+        move_dest_ids = vals.get('move_dest_ids')
+        if not move_dest_ids:
+            return None
+        if 'sale_line_id' not in self.env['stock.move']._fields:
+            return None
+        move_ids = []
+        for cmd in move_dest_ids:
+            if cmd[0] == 6:   # set / replace
+                move_ids.extend(cmd[2])
+            elif cmd[0] == 4:  # link
+                move_ids.append(cmd[1])
+        if not move_ids:
+            return None
+        for move in self.env['stock.move'].browse(move_ids):
+            if move.sale_line_id:
+                return move.sale_line_id
+        return None
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if any(vals.get(f) for f in LINE_FIELDS):
+                continue
+            # Try direct sale_line_id first, then fall back to move_dest_ids
             sale_line_id = vals.get('sale_line_id')
-            _logger.info(
-                'custom_line_fields.PurchaseOrderLine.create: '
-                'sale_line_id=%s, vals keys=%s',
-                sale_line_id,
-                list(vals.keys()),
+            sale_line = (
+                self.env['sale.order.line'].browse(sale_line_id)
+                if sale_line_id
+                else self._get_sale_line_from_move_dest(vals)
             )
-            if sale_line_id and not any(vals.get(f) for f in LINE_FIELDS):
-                sale_line = self.env['sale.order.line'].browse(sale_line_id)
-                if sale_line.exists():
-                    for f in LINE_FIELDS:
-                        if sale_line[f]:
-                            vals[f] = sale_line[f]
+            if sale_line and sale_line.exists():
+                for f in LINE_FIELDS:
+                    if sale_line[f]:
+                        vals[f] = sale_line[f]
         return super().create(vals_list)
-
-    def write(self, vals):
-        if 'sale_line_id' in vals:
-            _logger.info(
-                'custom_line_fields.PurchaseOrderLine.write: '
-                'sale_line_id=%s, vals keys=%s',
-                vals.get('sale_line_id'),
-                list(vals.keys()),
-            )
-        result = super().write(vals)
-        if 'sale_line_id' in vals and vals.get('sale_line_id'):
-            sale_line = self.env['sale.order.line'].browse(vals['sale_line_id'])
-            if sale_line.exists():
-                for line in self:
-                    line._sync_fields_from_sale_line(sale_line)
-        return result
 
     def _prepare_account_move_line(self, move=False):
         vals = super()._prepare_account_move_line(move)
