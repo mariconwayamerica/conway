@@ -1,5 +1,7 @@
 from odoo import fields, models
 
+from ._constants import LINE_FIELDS
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
@@ -12,3 +14,9 @@ class PurchaseOrderLine(models.Model):
     x_collection = fields.Char(string='Collection')
     x_towel_type = fields.Char(string='Towel Type')
     x_sales_description = fields.Char(string='Sales Description')
+
+    def _prepare_account_move_line(self, move=False):
+        vals = super()._prepare_account_move_line(move)
+        for f in LINE_FIELDS:
+            vals[f] = self[f]
+        return vals
