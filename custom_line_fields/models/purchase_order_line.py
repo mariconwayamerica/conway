@@ -1,6 +1,10 @@
+import logging
+
 from odoo import api, fields, models
 
 from ._constants import LINE_FIELDS
+
+_logger = logging.getLogger(__name__)
 
 
 class PurchaseOrderLine(models.Model):
@@ -29,6 +33,12 @@ class PurchaseOrderLine(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             sale_line_id = vals.get('sale_line_id')
+            _logger.info(
+                'custom_line_fields.PurchaseOrderLine.create: '
+                'sale_line_id=%s, vals keys=%s',
+                sale_line_id,
+                list(vals.keys()),
+            )
             if sale_line_id and not any(vals.get(f) for f in LINE_FIELDS):
                 sale_line = self.env['sale.order.line'].browse(sale_line_id)
                 if sale_line.exists():
@@ -38,6 +48,13 @@ class PurchaseOrderLine(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'sale_line_id' in vals:
+            _logger.info(
+                'custom_line_fields.PurchaseOrderLine.write: '
+                'sale_line_id=%s, vals keys=%s',
+                vals.get('sale_line_id'),
+                list(vals.keys()),
+            )
         result = super().write(vals)
         if 'sale_line_id' in vals and vals.get('sale_line_id'):
             sale_line = self.env['sale.order.line'].browse(vals['sale_line_id'])
