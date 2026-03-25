@@ -9,7 +9,7 @@
         'views/sale_order_views.xml',
         'views/purchase_order_views.xml',
         'views/account_move_views.xml',
-        'views/portal_purchase_templates.xml',
+        'views/purchase_order_templates.xml',
     ],
     'installable': True,
     'application': False,
