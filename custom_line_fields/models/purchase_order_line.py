@@ -21,9 +21,10 @@ class PurchaseOrderLine(models.Model):
             sale_line_id = vals.get('sale_line_id')
             if sale_line_id and not any(vals.get(f) for f in LINE_FIELDS):
                 sale_line = self.env['sale.order.line'].browse(sale_line_id)
-                for f in LINE_FIELDS:
-                    if sale_line[f]:
-                        vals[f] = sale_line[f]
+                if sale_line.exists():
+                    for f in LINE_FIELDS:
+                        if sale_line[f]:
+                            vals[f] = sale_line[f]
         return super().create(vals_list)
 
     def _prepare_account_move_line(self, move=False):
