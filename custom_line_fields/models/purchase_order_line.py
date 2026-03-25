@@ -15,6 +15,16 @@ class PurchaseOrderLine(models.Model):
     x_towel_type = fields.Char(string='Towel Type')
     x_sales_description = fields.Char(string='Sales Description')
 
+    def _sync_fields_from_sale_line(self, sale_line):
+        """Copy custom line fields from a sale order line if not already set."""
+        sync_vals = {
+            f: sale_line[f]
+            for f in LINE_FIELDS
+            if sale_line[f] and not self[f]
+        }
+        if sync_vals:
+            super(PurchaseOrderLine, self).write(sync_vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -26,6 +36,15 @@ class PurchaseOrderLine(models.Model):
                         if sale_line[f]:
                             vals[f] = sale_line[f]
         return super().create(vals_list)
+
+    def write(self, vals):
+        result = super().write(vals)
+        if 'sale_line_id' in vals and vals.get('sale_line_id'):
+            sale_line = self.env['sale.order.line'].browse(vals['sale_line_id'])
+            if sale_line.exists():
+                for line in self:
+                    line._sync_fields_from_sale_line(sale_line)
+        return result
 
     def _prepare_account_move_line(self, move=False):
         vals = super()._prepare_account_move_line(move)
