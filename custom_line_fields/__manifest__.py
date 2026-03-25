@@ -4,7 +4,7 @@
     'summary': 'Add custom line-level fields to SO, PO, and Invoice lines',
     'category': 'Sales',
     'author': 'Conway',
-    'depends': ['sale', 'purchase', 'account', 'stock'],
+    'depends': ['sale', 'purchase', 'account', 'stock', 'purchase_sale'],
     'data': [
         'views/sale_order_views.xml',
         'views/purchase_order_views.xml',
