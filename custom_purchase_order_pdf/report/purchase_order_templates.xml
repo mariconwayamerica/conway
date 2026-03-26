@@ -3,6 +3,32 @@
     <template id="report_purchaseorder_document_custom"
               inherit_id="purchase.report_purchaseorder_document">
 
+        <!-- Remove shipping address block -->
+        <xpath expr="//t[@t-if='o.dest_address_id']" position="replace"/>
+
+        <!-- Remove company tagline -->
+        <xpath expr="//div[hasclass('page')]" position="before">
+            <style>.o_company_tagline { display: none !important; }</style>
+        </xpath>
+
+        <!-- Remove Buyer block -->
+        <xpath expr="//div[@id='informations']/div[@t-if='o.user_id']" position="replace"/>
+
+        <!-- Move Payment Terms to right after informations (below tax ID area):
+             first remove from original position -->
+        <xpath expr="//strong[text()='Payment Terms: ']" position="replace"/>
+        <xpath expr="//span[@t-field='o.payment_term_id']" position="replace"/>
+
+        <!-- Add Payment Terms right after informations -->
+        <xpath expr="//div[@id='informations']" position="after">
+            <div class="row mb-2">
+                <div class="col">
+                    <strong>Payment Terms: </strong>
+                    <span t-field="o.payment_term_id"/>
+                </div>
+            </div>
+        </xpath>
+
         <!-- Add custom header fields after informations div -->
         <xpath expr="//div[@id='informations']" position="after">
             <div class="row mb-4">
