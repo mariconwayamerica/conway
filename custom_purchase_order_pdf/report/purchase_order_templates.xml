@@ -7,10 +7,7 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="replace">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <!-- Vendor info in header via external_layout_standard (see template below) -->
                 <t t-set="address" t-value="''"/>
-                <!-- Shipping address block removed -->
-                <!-- Company tagline suppressed via CSS -->
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
@@ -26,7 +23,6 @@
                     </div>
 
                     <div id="informations" class="row mb-4">
-                        <!-- Buyer block removed -->
                         <div t-if="o.partner_ref" class="col">
                             <strong>Your Order Reference</strong>
                             <div t-field="o.partner_ref"/>
@@ -39,7 +35,6 @@
                             <strong>Order Deadline:</strong>
                             <p t-field="o.date_order" t-options="{'date_only': 'true'}" class="m-0"/>
                         </div>
-                        <!-- Expected Arrival removed -->
                     </div>
 
                     <!-- Custom header fields -->
