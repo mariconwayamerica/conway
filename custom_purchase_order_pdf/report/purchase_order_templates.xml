@@ -40,49 +40,49 @@
                             <strong>Order Deadline:</strong>
                             <p t-field="o.date_order" t-options="{'date_only': 'true'}" class="m-0"/>
                         </div>
-                        <div t-if="o.date_planned" class="col-2 bm-2">
-                            <strong>Expected Arrival:</strong>
-                            <p t-field="o.date_planned" t-options="{'date_only': 'true'}" class="m-0"/>
-                        </div>
-                    </div>
-
-                    <!-- Payment Terms moved here, below the informations (tax ID) area -->
-                    <div class="row mb-4">
-                        <div class="col">
-                            <strong>Payment Terms: </strong>
-                            <span t-field="o.payment_term_id"/>
-                        </div>
+                        <!-- Expected Arrival removed -->
                     </div>
 
                     <!-- Custom header fields -->
                     <div class="row mb-4">
-                        <div t-if="o.x_original_customer" class="col">
-                            <strong>Original Customer</strong>
-                            <div t-esc="o.x_original_customer"/>
+                        <div class="col">
+                            <div t-if="o.x_original_customer">
+                                <strong>Original Customer: </strong>
+                                <span t-esc="o.x_original_customer"/>
+                            </div>
+                            <div t-if="o.x_original_customer_po_number">
+                                <strong>Original Customer PO Number: </strong>
+                                <span t-field="o.x_original_customer_po_number"/>
+                            </div>
+                            <div t-if="o.x_original_ship_date">
+                                <strong>Original Ship Date: </strong>
+                                <span t-field="o.x_original_ship_date" t-options="{'widget': 'date'}"/>
+                            </div>
+                            <div t-if="o.x_original_cancel_date">
+                                <strong>Original Cancel Date: </strong>
+                                <span t-field="o.x_original_cancel_date" t-options="{'widget': 'date'}"/>
+                            </div>
                         </div>
-                        <div t-if="o.x_original_ship_date" class="col">
-                            <strong>Original Ship Date</strong>
-                            <div t-field="o.x_original_ship_date"/>
-                        </div>
-                        <div t-if="o.x_original_cancel_date" class="col">
-                            <strong>Original Cancel Date</strong>
-                            <div t-field="o.x_original_cancel_date"/>
+                        <div t-if="o.x_original_customer_shipping_address" class="col">
+                            <strong>Original Customer Shipping Address: </strong>
+                            <span t-field="o.x_original_customer_shipping_address"/>
                         </div>
                     </div>
 
                     <table class="o_has_total_table table o_main_table table-borderless">
                         <thead style="display: table-row-group">
                             <tr>
-                                <th name="th_description" class="text-start"><strong>Description</strong></th>
+                                <th name="th_description" class="text-start"><strong>Product Name</strong></th>
                                 <th class="text-start"><strong>Factory Style #</strong></th>
+                                <th class="text-start"><strong>Item Display Name</strong></th>
+                                <th class="text-start"><strong>General Notes</strong></th>
                                 <th class="text-start"><strong>Color Code</strong></th>
                                 <th class="text-start"><strong>Brand</strong></th>
                                 <th class="text-start"><strong>Collection</strong></th>
                                 <th class="text-start"><strong>Towel Type</strong></th>
+                                <th class="text-start"><strong>Sales Description</strong></th>
                                 <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                                 <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
-                                <th name="th_discount" class="text-end"><strong>Disc.</strong></th>
-                                <th name="th_taxes" class="text-end"><strong>Taxes</strong></th>
                                 <th name="th_subtotal" class="text-end"><strong>Amount</strong></th>
                             </tr>
                         </thead>
@@ -96,10 +96,13 @@
                                             <span t-field="line.name"/>
                                         </td>
                                         <td class="text-start"><span t-esc="line.x_factory_style_number or ''"/></td>
+                                        <td class="text-start"><span t-esc="line.x_item_display_name or ''"/></td>
+                                        <td class="text-start"><span t-esc="line.x_general_notes or ''"/></td>
                                         <td class="text-start"><span t-esc="line.x_color_code or ''"/></td>
                                         <td class="text-start"><span t-esc="line.x_brand or ''"/></td>
                                         <td class="text-start"><span t-esc="line.x_collection or ''"/></td>
                                         <td class="text-start"><span t-esc="line.x_towel_type or ''"/></td>
+                                        <td class="text-start"><span t-esc="line.x_sales_description or ''"/></td>
                                         <td class="text-end">
                                             <span t-field="line.product_qty"/>
                                             <span t-field="line.product_uom_id.name" groups="uom.group_uom"/>
@@ -110,12 +113,6 @@
                                         </td>
                                         <td class="text-end">
                                             <span t-field="line.price_unit"/>
-                                        </td>
-                                        <td class="text-end">
-                                            <span class="text-align-bottom"><span t-field="line.discount"/>%</span>
-                                        </td>
-                                        <td class="text-end">
-                                            <span t-out="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
                                         </td>
                                         <td class="text-end">
                                             <span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
@@ -159,6 +156,11 @@
 
                     <p t-field="o.note" class="mt-4"/>
                     <div class="oe_structure"/>
+
+                    <div class="mt-3">
+                        <strong>Payment Terms: </strong>
+                        <span t-field="o.payment_term_id"/>
+                    </div>
 
                     <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
                     <t t-set="portal_url" t-value="base_address + '/my/purchase/' + str(o.id) + '#portal_connect_software_modal'"/>
