@@ -17,7 +17,7 @@
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
-                        .o_company_and_address { flex-direction: row-reverse; }
+                        .address div[name="address"] { margin-left: 0 !important; }
                     </style>
                     <div class="oe_structure"/>
 
