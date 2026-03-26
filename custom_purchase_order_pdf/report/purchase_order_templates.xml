@@ -7,8 +7,10 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="replace">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <t t-set="address">
-                    <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                <!-- Vendor address hidden; tax ID shown below company info block -->
+                <t t-set="address" t-value="''"/>
+                <t t-set="information_block">
+                    <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;vat&quot;], &quot;no_marker&quot;: True}"/>
                 </t>
                 <!-- Shipping address block removed -->
                 <!-- Company tagline suppressed via CSS -->
