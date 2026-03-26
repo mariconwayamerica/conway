@@ -18,8 +18,9 @@
                     <style>
                         .o_company_tagline { display: none !important; }
                         .address div[name="address"] { margin-left: 0 !important; }
-                        .header { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-                        .article { padding-top: 0 !important; margin-top: 0 !important; }
+                        .header .d-flex { margin-bottom: 0 !important; }
+                        .header .row { margin-top: 0 !important; margin-bottom: 0 !important; }
+                        .header ul { margin-bottom: 0 !important; }
                         .address.row { margin-top: 0 !important; margin-bottom: 8px !important; }
                     </style>
                     <div class="oe_structure"/>
