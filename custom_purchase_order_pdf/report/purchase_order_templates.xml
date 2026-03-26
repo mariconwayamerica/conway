@@ -7,16 +7,18 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="replace">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <!-- Vendor info moved to right side (below company block) -->
-                <t t-set="address" t-value="''"/>
-                <t t-set="information_block">
+                <!-- Vendor info in address slot -->
+                <t t-set="address">
                     <strong>For Vendor:</strong>
                     <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}"/>
                 </t>
                 <!-- Shipping address block removed -->
                 <!-- Company tagline suppressed via CSS -->
                 <div class="page">
-                    <style>.o_company_tagline { display: none !important; }</style>
+                    <style>
+                        .o_company_tagline { display: none !important; }
+                        .o_company_and_address { flex-direction: row-reverse; }
+                    </style>
                     <div class="oe_structure"/>
 
                     <div class="mt-4">
