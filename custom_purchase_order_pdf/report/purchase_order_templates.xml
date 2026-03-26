@@ -7,21 +7,13 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="replace">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-                <!-- Vendor info in address slot -->
-                <t t-set="address">
-                    <strong>For Vendor:</strong>
-                    <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}"/>
-                </t>
+                <!-- Vendor info in header via external_layout_standard (see template below) -->
+                <t t-set="address" t-value="''"/>
                 <!-- Shipping address block removed -->
                 <!-- Company tagline suppressed via CSS -->
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
-                        .address div[name="address"] { margin-left: 0 !important; }
-                        .header .d-flex { margin-bottom: 0 !important; }
-                        .header .row { margin-top: 0 !important; margin-bottom: 0 !important; }
-                        .header ul { margin-bottom: 0 !important; }
-                        .address.row { margin-top: 0 !important; margin-bottom: 8px !important; }
                     </style>
                     <div class="oe_structure"/>
 
@@ -179,4 +171,16 @@
         </xpath>
 
     </template>
+
+    <!-- Inject vendor info into the header row alongside company address -->
+    <template id="external_layout_standard_po_vendor"
+              inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@name='company_address']" position="after">
+            <div t-if="o and o._name == 'purchase.order'" class="col-6">
+                <strong>For Vendor:</strong>
+                <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}"/>
+            </div>
+        </xpath>
+    </template>
+
 </odoo>
