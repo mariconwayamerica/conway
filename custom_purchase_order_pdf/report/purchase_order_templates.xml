@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document_custom"
+              inherit_id="purchase.report_purchaseorder_document">
+
+        <!-- Add custom header fields after informations div -->
+        <xpath expr="//div[@id='informations']" position="after">
+            <div class="row mb-4">
+                <div t-if="o.x_original_customer" class="col">
+                    <strong>Original Customer</strong>
+                    <div t-esc="o.x_original_customer"/>
+                </div>
+                <div t-if="o.x_original_ship_date" class="col">
+                    <strong>Original Ship Date</strong>
+                    <div t-field="o.x_original_ship_date"/>
+                </div>
+                <div t-if="o.x_original_cancel_date" class="col">
+                    <strong>Original Cancel Date</strong>
+                    <div t-field="o.x_original_cancel_date"/>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Add custom column headers -->
+        <xpath expr="//th[@name='th_description']" position="after">
+            <th class="text-start"><strong>Factory Style #</strong></th>
+            <th class="text-start"><strong>Color Code</strong></th>
+            <th class="text-start"><strong>Brand</strong></th>
+            <th class="text-start"><strong>Collection</strong></th>
+            <th class="text-start"><strong>Towel Type</strong></th>
+        </xpath>
+
+        <!-- Add custom column data -->
+        <xpath expr="//td[@id='product']" position="after">
+            <td class="text-start"><span t-esc="line.x_factory_style_number or ''"/></td>
+            <td class="text-start"><span t-esc="line.x_color_code or ''"/></td>
+            <td class="text-start"><span t-esc="line.x_brand or ''"/></td>
+            <td class="text-start"><span t-esc="line.x_collection or ''"/></td>
+            <td class="text-start"><span t-esc="line.x_towel_type or ''"/></td>
+        </xpath>
+
+    </template>
+</odoo>
