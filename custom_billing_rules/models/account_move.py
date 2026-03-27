@@ -18,7 +18,7 @@ class AccountMove(models.Model):
         for bill in self:
             purchase_orders = bill.invoice_line_ids.mapped('purchase_line_id.order_id')
             for po in purchase_orders:
-                sale_orders = po.sale_ids
+                sale_orders = po.order_line.mapped('move_dest_ids.sale_line_id.order_id')
                 for so in sale_orders:
                     if so.invoice_status != 'to invoice':
                         continue
