@@ -1,7 +1,7 @@
 {
     'name': 'Custom Billing Rules',
     'version': '19.0.1.0.0',
-    'summary': 'Auto-creates customer invoice from SO when vendor bill is fully paid',
+    'summary': 'Auto-creates customer invoice from SO when PO gets billed',
     'category': 'Accounting',
     'author': 'Conway',
     'depends': ['sale', 'purchase', 'account'],
