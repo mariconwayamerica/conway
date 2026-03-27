@@ -11,6 +11,8 @@
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
+                        .o_main_table { font-size: 8pt; table-layout: fixed; width: 100%; }
+                        .o_main_table td, .o_main_table th { word-wrap: break-word; overflow-wrap: break-word; }
                     </style>
                     <div class="oe_structure"/>
 
