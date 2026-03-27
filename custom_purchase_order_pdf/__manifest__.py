@@ -1,6 +1,6 @@
 {
     'name': 'Custom Purchase Order PDF',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'summary': 'Adds custom header fields and line columns to the Purchase Order PDF report',
     'category': 'Purchase',
     'author': 'Conway',
