@@ -26,11 +26,18 @@ class StockRule(models.Model):
         original_customer = sale_line.order_id.x_original_customer or ''
 
         if 'TJX Companies' in original_customer:
-            vals['price_unit'] = sale_line.price_unit * 0.5
+            so_price = sale_line.price_unit
+            new_price = so_price * 0.5
             _logger.info(
-                'custom_customer_price_logic: TJX Companies — PO price set to SO price * 0.5 = %s '
+                'custom_customer_price_logic: TJX Companies — '
+                'SO price_unit=%s, calculated PO price=%s, vals price_unit before=%s '
                 '(product: %s, SO: %s)',
-                vals['price_unit'], product_id.name, sale_line.order_id.name,
+                so_price, new_price, vals.get('price_unit'), product_id.name, sale_line.order_id.name,
+            )
+            vals['price_unit'] = new_price
+            _logger.info(
+                'custom_customer_price_logic: TJX Companies — vals price_unit after=%s',
+                vals['price_unit'],
             )
 
         elif 'Wal-mart Canada Corp' in original_customer:
