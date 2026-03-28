@@ -15,15 +15,30 @@ class StockRule(models.Model):
             product_id, product_qty, product_uom, company_id, values, po
         )
 
+        _logger.info(
+            'custom_customer_price_logic: _prepare_purchase_order_line called — '
+            'product=%s, sale_line_id=%s, values keys=%s, default price_unit=%s',
+            product_id.name,
+            values.get('sale_line_id'),
+            list(values.keys()),
+            vals.get('price_unit'),
+        )
+
         sale_line_id = values.get('sale_line_id')
         if not sale_line_id:
+            _logger.info('custom_customer_price_logic: no sale_line_id in values — skipping')
             return vals
 
         sale_line = self.env['sale.order.line'].browse(sale_line_id)
         if not sale_line.exists():
+            _logger.info('custom_customer_price_logic: sale_line %s does not exist — skipping', sale_line_id)
             return vals
 
         original_customer = sale_line.order_id.x_original_customer or ''
+        _logger.info(
+            'custom_customer_price_logic: original_customer=%r, SO=%s',
+            original_customer, sale_line.order_id.name,
+        )
 
         if 'TJX Companies' in original_customer:
             vals['price_unit'] = sale_line.price_unit * 0.5
