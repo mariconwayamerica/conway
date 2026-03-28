@@ -30,7 +30,7 @@ class PurchaseOrderLine(models.Model):
                     vals['price_unit'], sale_line.order_id.name,
                 )
 
-            elif 'Wal-mart Canada Corp' in original_customer:
+            elif 'Wal-mart Cananda Corp' in original_customer:
                 product_id = vals.get('product_id')
                 order_id = vals.get('order_id')
                 if product_id and order_id:
@@ -40,13 +40,13 @@ class PurchaseOrderLine(models.Model):
                     if canada_price is not None:
                         vals['price_unit'] = canada_price
                         _logger.warning(
-                            'custom_customer_price_logic: Walmart Canada — PO price set to canada price = %s '
+                            'custom_customer_price_logic: Wal-mart Cananda — PO price set to canada price = %s '
                             '(SO: %s)',
                             canada_price, sale_line.order_id.name,
                         )
                     else:
                         _logger.warning(
-                            'custom_customer_price_logic: Walmart Canada — no canada price found for '
+                            'custom_customer_price_logic: Wal-mart Cananda — no canada price found for '
                             'product %s, using default',
                             product.name,
                         )
