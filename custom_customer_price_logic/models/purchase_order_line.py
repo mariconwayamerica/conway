@@ -23,9 +23,9 @@ class PurchaseOrderLine(models.Model):
             original_customer = sale_line.order_id.x_original_customer or ''
 
             if 'TJX Companies' in original_customer:
-                vals['price_unit'] = sale_line.price_unit * 0.5
+                vals['price_unit'] = sale_line.price_unit * 0.93
                 _logger.warning(
-                    'custom_customer_price_logic: TJX Companies — PO price set to SO * 0.5 = %s '
+                    'custom_customer_price_logic: TJX Companies — PO price set to SO * 0.93 = %s '
                     '(SO: %s)',
                     vals['price_unit'], sale_line.order_id.name,
                 )
