@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(find /c/Users/mzeng/Documents/Conway -name *.py -type f)",
-      "Bash(python3 -c \"import odoo; print\\(odoo.__file__\\)\")"
+      "Bash(python3 -c \"import odoo; print\\(odoo.__file__\\)\")",
+      "Read(//c//**)"
     ]
   }
 }

@@ -1,5 +1,6 @@
 # Odoo Development Rules
 
-When writing Odoo code for this project, follow the 
+When writing Odoo code for this project, always follow the 
 guidelines found in the `.claude\` folder and subfolders. these should be up to date for odoo 19.  
 
+do not add committ or push unless requested

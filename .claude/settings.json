@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:UsersmzengAppDataLocalPrograms -name *purchase_order_templates.xml)",
+      "Read(//c/Program Files/**)",
+      "Bash(find C:Usersmzeng -name *purchase_order_templates.xml -type f)",
+      "Bash(python3 -c \"import site; print\\(''\\\\n''.join\\(site.getsitepackages\\(\\)\\)\\)\")",
+      "Bash(find C:Usersmzeng -path */purchase/report* -o -path */purchase_order*)",
+      "Bash(pip show:*)",
+      "Bash(python -c \"import odoo; print\\(odoo.__file__\\)\")",
+      "Bash(curl -s https://raw.githubusercontent.com/odoo/odoo/19.0/addons/purchase/report/purchase_order_templates.xml)",
+      "Bash(curl -s https://raw.githubusercontent.com/odoo/odoo/19.0/addons/web/views/report_templates.xml)",
+      "WebFetch(domain:www.odoo.com)",
+      "Bash(find /home -name \"stock_rule.py\" -path \"*/purchase_stock/*\")",
+      "Bash(find /usr -name \"stock_rule.py\" -path \"*/purchase_stock/*\")"
+    ]
+  }
+}
