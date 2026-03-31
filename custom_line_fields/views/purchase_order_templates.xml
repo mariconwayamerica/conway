@@ -20,7 +20,7 @@
         <xpath expr="//td[@id='product_name']" position="after">
             <td><span t-esc="line.x_factory_style_number or ''"/></td>
             <td><span t-esc="line.x_item_display_name or ''"/></td>
-            <td><span t-esc="line.x_upc or ''"/></td>
+            <td><span t-esc="line.x_item_upc or ''"/></td>
             <td><span t-esc="line.x_color_code or ''"/></td>
             <td><span t-esc="line.x_brand or ''"/></td>
             <td><span t-esc="line.x_collection or ''"/></td>
