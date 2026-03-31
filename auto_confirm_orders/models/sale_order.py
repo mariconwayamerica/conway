@@ -1,7 +1,4 @@
-import logging
 from odoo import models, api
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -11,10 +8,17 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         orders = super().create(vals_list)
         if not self.env.context.get('auto_confirming_sale'):
-            for order in orders.filtered(lambda o: o.state in ('draft', 'sent')):
-                try:
-                    with self.env.cr.savepoint():
-                        order.with_context(auto_confirming_sale=True).action_confirm()
-                except Exception as e:
-                    _logger.warning('auto_confirm_orders: could not confirm SO %s: %s', order.name, e)
+            orders.with_context(auto_confirming_sale=True).filtered(
+                lambda o: o.state == 'draft'
+            ).action_confirm()
         return orders
+
+    def action_confirm(self):
+        res = super().action_confirm()
+        if not self.env.context.get('auto_confirming_purchase'):
+            purchase_orders = self.env['purchase.order'].search([
+                ('group_id', 'in', self.mapped('procurement_group_id').ids),
+                ('state', 'in', ('draft', 'sent')),
+            ])
+            purchase_orders.with_context(auto_confirming_purchase=True).button_confirm()
+        return res
