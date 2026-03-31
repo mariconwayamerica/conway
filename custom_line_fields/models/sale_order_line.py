@@ -8,6 +8,7 @@ class SaleOrderLine(models.Model):
 
     x_factory_style_number = fields.Char(string='Factory Style Number')
     x_item_display_name = fields.Char(string='Item Display Name')
+    x_item_upc = fields.Char(string='UPC')
     x_general_notes = fields.Char(string='General Notes')
     x_color_code = fields.Char(string='Color Code')
     x_brand = fields.Char(string='Brand')
