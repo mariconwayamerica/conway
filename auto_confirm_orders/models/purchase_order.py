@@ -9,6 +9,6 @@ class PurchaseOrder(models.Model):
         orders = super().create(vals_list)
         if not self.env.context.get('auto_confirming_purchase'):
             orders.with_context(auto_confirming_purchase=True).filtered(
-                lambda o: o.state in ('draft', 'sent')
+                lambda o: o.state in ('draft', 'sent') and not o.origin
             ).button_confirm()
         return orders
