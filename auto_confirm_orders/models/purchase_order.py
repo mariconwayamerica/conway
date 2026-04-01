@@ -4,11 +4,7 @@ from odoo import models, api
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        orders = super().create(vals_list)
-        if not self.env.context.get('auto_confirming_purchase'):
-            orders.with_context(auto_confirming_purchase=True).filtered(
-                lambda o: o.state in ('draft', 'sent') and not o.origin
-            ).button_confirm()
-        return orders
+    @api.model
+    def _cron_confirm_rfq(self):
+        orders = self.search([('state', 'in', ('draft', 'sent'))])
+        orders.button_confirm()

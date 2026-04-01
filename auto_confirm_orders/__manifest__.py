@@ -1,10 +1,11 @@
 {
     'name': 'Auto Confirm Orders',
-    'version': '19.0.1.0.0',
-    'summary': 'Automatically confirm sales and purchase orders on creation',
+    'version': '19.0.1.1.0',
+    'summary': 'Auto-confirm sales orders on creation; confirm purchase RFQs via daily scheduled action',
     'category': 'Sales/Purchase',
     'author': 'Conway',
     'depends': ['sale', 'purchase', 'purchase_stock'],
+    'data': ['data/cron.xml'],
     'installable': True,
     'application': False,
     'auto_install': False,
