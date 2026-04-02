@@ -19,9 +19,17 @@ class SaleOrder(models.Model):
             return True
         res = super(SaleOrder, to_confirm).action_confirm()
         if not self.env.context.get('auto_confirming_purchase'):
+            self.env['purchase.order'].flush_model(['origin', 'state'])
+            so_names = to_confirm.mapped('name')
             purchase_orders = self.env['purchase.order'].search([
-                ('origin', 'in', to_confirm.mapped('name')),
+                ('origin', 'in', so_names),
                 ('state', 'in', ('draft', 'sent')),
             ])
+            # Also catch POs where origin has been extended (e.g. "S/001, S/001, S/001")
+            for so_name in so_names:
+                purchase_orders |= self.env['purchase.order'].search([
+                    ('origin', 'like', so_name + ','),
+                    ('state', 'in', ('draft', 'sent')),
+                ])
             purchase_orders.with_context(auto_confirming_purchase=True).button_confirm()
         return res
