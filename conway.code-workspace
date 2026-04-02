@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"suitecloud.developerAssistant.enable": false,
+		"suitecloud.developerAssistant.disableWelcomeNotification": true
+	}
+}
