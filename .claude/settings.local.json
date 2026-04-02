@@ -3,7 +3,9 @@
     "allow": [
       "Bash(find /c/Users/mzeng/Documents/Conway -name *.py -type f)",
       "Bash(python3 -c \"import odoo; print\\(odoo.__file__\\)\")",
-      "Read(//c//**)"
+      "Read(//c//**)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/odoo/odoo/19.0/addons/sale/models/sale_order.py\")",
+      "Bash(xargs grep:*)"
     ]
   }
 }
