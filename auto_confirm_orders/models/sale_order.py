@@ -14,10 +14,13 @@ class SaleOrder(models.Model):
         return orders
 
     def action_confirm(self):
-        res = super().action_confirm()
+        to_confirm = self.filtered(lambda o: o.state in ('draft', 'sent'))
+        if not to_confirm:
+            return True
+        res = super(SaleOrder, to_confirm).action_confirm()
         if not self.env.context.get('auto_confirming_purchase'):
             purchase_orders = self.env['purchase.order'].search([
-                ('origin', 'in', self.mapped('name')),
+                ('origin', 'in', to_confirm.mapped('name')),
                 ('state', 'in', ('draft', 'sent')),
             ])
             purchase_orders.with_context(auto_confirming_purchase=True).button_confirm()
