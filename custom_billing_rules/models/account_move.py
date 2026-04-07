@@ -21,7 +21,7 @@ class StockPicking(models.Model):
             if so.invoice_status != 'to invoice':
                 continue
             try:
-                so._create_invoices()
+                invoices = so._create_invoices()
                 _logger.info(
                     'Auto-created customer invoice for SO %s triggered by dropship picking %s',
                     so.name, picking.name,
@@ -41,10 +41,11 @@ class StockPicking(models.Model):
                 )
                 continue
 
+            invoice_name = invoices[:1].name if invoices else so.name
             try:
                 po_id = connector.netsuite_find_po_id(customer_ref)
                 if po_id:
-                    connector.netsuite_transform_po_to_bill(po_id)
+                    connector.netsuite_transform_po_to_bill(po_id, memo=invoice_name)
                 else:
                     _logger.warning(
                         'NetSuite sync skipped for SO %s: no PO matched reference %r',

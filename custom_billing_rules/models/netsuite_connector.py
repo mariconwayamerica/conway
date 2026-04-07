@@ -125,7 +125,7 @@ class NetsuiteConnector(models.AbstractModel):
 
         return str(items[0]['id'])
 
-    def netsuite_transform_po_to_bill(self, po_internal_id):
+    def netsuite_transform_po_to_bill(self, po_internal_id, memo=None):
         """Transform a NetSuite Purchase Order into a Vendor Bill.
 
         Returns the new Vendor Bill's internal ID string.
@@ -141,7 +141,8 @@ class NetsuiteConnector(models.AbstractModel):
             'Content-Type':  'application/json',
         }
 
-        resp = requests.post(url, json={}, headers=headers, timeout=30)
+        body = {'memo': memo} if memo else {}
+        resp = requests.post(url, json=body, headers=headers, timeout=30)
         resp.raise_for_status()
 
         # NetSuite returns the new record URL in the Location header
