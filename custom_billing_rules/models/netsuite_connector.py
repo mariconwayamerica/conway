@@ -157,21 +157,27 @@ class NetsuiteConnector(models.AbstractModel):
     def netsuite_find_so_from_po(self, po_internal_id):
         """Return the NetSuite internal ID of the Sales Order that created this PO.
 
-        Uses the createdFrom field on the Purchase Order record.
+        Uses SuiteQL to query the createdFrom field on the transaction.
         Returns the string ID, or None if not found.
         """
         base_url = self._ns_base_url()
-        url = f'{base_url}/record/v1/purchaseOrder/{po_internal_id}?fields=createdFrom'
+        url = f'{base_url}/query/v1/suiteql'
 
-        headers = {
-            'Authorization': self._ns_auth_header('GET', url),
-            'Content-Type':  'application/json',
+        payload = {
+            'q': f"SELECT createdfrom FROM transaction WHERE id = {int(po_internal_id)} AND type = 'PurchOrd'"
         }
 
-        resp = requests.get(url, headers=headers, timeout=30)
+        headers = {
+            'Authorization': self._ns_auth_header('POST', url),
+            'Content-Type':  'application/json',
+            'Prefer':        'transient',
+        }
+
+        resp = requests.post(url, json=payload, headers=headers, timeout=30)
         resp.raise_for_status()
 
-        so_id = resp.json().get('createdFrom', {}).get('id')
+        items = resp.json().get('items', [])
+        so_id = items[0].get('createdfrom') if items else None
         if not so_id:
             _logger.warning('NetSuite: PO %s has no createdFrom Sales Order', po_internal_id)
             return None
