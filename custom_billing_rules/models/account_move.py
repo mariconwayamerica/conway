@@ -15,6 +15,7 @@ class StockPicking(models.Model):
         return result
 
     def _auto_create_sale_invoices(self):
+        connector = self.env['netsuite.connector']
         for picking in self:
             so = picking.sale_id
             if so.invoice_status != 'to invoice':
@@ -29,4 +30,28 @@ class StockPicking(models.Model):
                 _logger.exception(
                     'Failed to auto-create invoice for SO %s from dropship picking %s',
                     so.name, picking.name,
+                )
+                continue
+
+            customer_ref = so.client_order_ref
+            if not customer_ref:
+                _logger.info(
+                    'NetSuite sync skipped for SO %s: no Customer Reference set',
+                    so.name,
+                )
+                continue
+
+            try:
+                po_id = connector.netsuite_find_po_id(customer_ref)
+                if po_id:
+                    connector.netsuite_transform_po_to_bill(po_id)
+                else:
+                    _logger.warning(
+                        'NetSuite sync skipped for SO %s: no PO matched reference %r',
+                        so.name, customer_ref,
+                    )
+            except Exception:
+                _logger.exception(
+                    'NetSuite sync failed for SO %s (reference %r)',
+                    so.name, customer_ref,
                 )
