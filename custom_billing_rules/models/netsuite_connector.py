@@ -171,6 +171,8 @@ class NetsuiteConnector(models.AbstractModel):
         }
 
         resp = requests.post(url, json={}, headers=headers, timeout=30)
+        if not resp.ok:
+            _logger.error('NetSuite Item Fulfillment error %s: %s', resp.status_code, resp.text)
         resp.raise_for_status()
 
         location = resp.headers.get('Location', '')

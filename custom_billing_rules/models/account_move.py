@@ -24,8 +24,9 @@ class StockPicking(models.Model):
                 continue
             try:
                 invoices = so._create_invoices()
+                invoices.action_post()
                 _logger.info(
-                    'Auto-created customer invoice for SO %s triggered by dropship picking %s',
+                    'Auto-created and posted customer invoice for SO %s triggered by dropship picking %s',
                     so.name, picking.name,
                 )
             except Exception:
