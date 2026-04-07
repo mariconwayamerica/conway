@@ -60,13 +60,28 @@ class StockPicking(models.Model):
                 )
                 continue
 
-            # 2. Create NetSuite Item Fulfillment
+            # 2. Create NetSuite Item Fulfillment (must transform from the Sales Order)
+            so_ns_id = None
             try:
-                connector.netsuite_create_item_fulfillment(po_id)
+                so_ns_id = connector.netsuite_find_so_from_po(po_id)
             except Exception:
                 _logger.exception(
-                    'NetSuite Item Fulfillment failed for SO %s (reference %r)',
+                    'NetSuite SO lookup from PO failed for SO %s (reference %r)',
                     so.name, customer_ref,
+                )
+
+            if so_ns_id:
+                try:
+                    connector.netsuite_create_item_fulfillment(so_ns_id)
+                except Exception:
+                    _logger.exception(
+                        'NetSuite Item Fulfillment failed for SO %s (reference %r)',
+                        so.name, customer_ref,
+                    )
+            else:
+                _logger.warning(
+                    'NetSuite Item Fulfillment skipped for SO %s: could not find linked NS Sales Order from PO %s',
+                    so.name, po_id,
                 )
 
             # 3. Create NetSuite Vendor Bill (with Odoo invoice number in memo)

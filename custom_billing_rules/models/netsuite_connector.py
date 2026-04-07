@@ -154,15 +154,39 @@ class NetsuiteConnector(models.AbstractModel):
         )
         return bill_id
 
-    def netsuite_create_item_fulfillment(self, po_internal_id):
-        """Create an Item Fulfillment from a NetSuite Purchase Order (dropship).
+    def netsuite_find_so_from_po(self, po_internal_id):
+        """Return the NetSuite internal ID of the Sales Order that created this PO.
+
+        Uses the createdFrom field on the Purchase Order record.
+        Returns the string ID, or None if not found.
+        """
+        base_url = self._ns_base_url()
+        url = f'{base_url}/record/v1/purchaseOrder/{po_internal_id}?fields=createdFrom'
+
+        headers = {
+            'Authorization': self._ns_auth_header('GET', url),
+            'Content-Type':  'application/json',
+        }
+
+        resp = requests.get(url, headers=headers, timeout=30)
+        resp.raise_for_status()
+
+        so_id = resp.json().get('createdFrom', {}).get('id')
+        if not so_id:
+            _logger.warning('NetSuite: PO %s has no createdFrom Sales Order', po_internal_id)
+            return None
+
+        return str(so_id)
+
+    def netsuite_create_item_fulfillment(self, so_internal_id):
+        """Create an Item Fulfillment from a NetSuite Sales Order (dropship).
 
         Returns the new Item Fulfillment's internal ID string.
         """
         base_url = self._ns_base_url()
         url = (
-            f'{base_url}/record/v1/purchaseOrder'
-            f'/{po_internal_id}/!transform/itemFulfillment'
+            f'{base_url}/record/v1/salesOrder'
+            f'/{so_internal_id}/!transform/itemFulfillment'
         )
 
         headers = {
@@ -179,6 +203,6 @@ class NetsuiteConnector(models.AbstractModel):
         fulfillment_id = location.rstrip('/').split('/')[-1] if location else 'unknown'
 
         _logger.info(
-            'NetSuite: PO %s transformed to Item Fulfillment %s', po_internal_id, fulfillment_id
+            'NetSuite: SO %s transformed to Item Fulfillment %s', so_internal_id, fulfillment_id
         )
         return fulfillment_id
