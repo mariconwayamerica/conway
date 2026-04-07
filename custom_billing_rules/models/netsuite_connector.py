@@ -153,3 +153,30 @@ class NetsuiteConnector(models.AbstractModel):
             'NetSuite: PO %s transformed to Vendor Bill %s', po_internal_id, bill_id
         )
         return bill_id
+
+    def netsuite_create_item_fulfillment(self, po_internal_id):
+        """Create an Item Fulfillment from a NetSuite Purchase Order (dropship).
+
+        Returns the new Item Fulfillment's internal ID string.
+        """
+        base_url = self._ns_base_url()
+        url = (
+            f'{base_url}/record/v1/purchaseOrder'
+            f'/{po_internal_id}/!transform/itemFulfillment'
+        )
+
+        headers = {
+            'Authorization': self._ns_auth_header('POST', url),
+            'Content-Type':  'application/json',
+        }
+
+        resp = requests.post(url, json={}, headers=headers, timeout=30)
+        resp.raise_for_status()
+
+        location = resp.headers.get('Location', '')
+        fulfillment_id = location.rstrip('/').split('/')[-1] if location else 'unknown'
+
+        _logger.info(
+            'NetSuite: PO %s transformed to Item Fulfillment %s', po_internal_id, fulfillment_id
+        )
+        return fulfillment_id
