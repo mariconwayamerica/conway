@@ -1,7 +1,7 @@
 {
     'name': 'Custom Billing Rules',
-    'version': '19.0.1.2.0',
-    'summary': 'auto creates customer invoice on dropship validate; syncs PO to Vendor Bill in NetSuite',
+    'version': '19.0.1.3.0',
+    'summary': 'auto creates customer invoice on dropship validate; create vendor bill and if in ns',
     'category': 'Accounting',
     'author': 'Conway',
     'depends': ['sale', 'purchase', 'account'],
