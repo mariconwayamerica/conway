@@ -15,6 +15,7 @@
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
+                        .o_company_vat { display: none !important; }
                     </style>
                     <div class="oe_structure"/>
 
