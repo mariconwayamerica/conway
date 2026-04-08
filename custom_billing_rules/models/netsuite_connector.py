@@ -182,47 +182,11 @@ class NetsuiteConnector(models.AbstractModel):
 
         return str(so_id)
 
-    def netsuite_find_existing_item_fulfillment(self, so_internal_id):
-        """Return the internal ID of an existing Item Fulfillment for a Sales Order, or None."""
-        base_url = self._ns_base_url()
-        url = f'{base_url}/query/v1/suiteql'
-
-        payload = {
-            'q': (
-                f"SELECT id FROM transaction "
-                f"WHERE type = 'ItemShip' AND createdFrom = {int(so_internal_id)}"
-            )
-        }
-
-        headers = {
-            'Authorization': self._ns_auth_header('POST', url),
-            'Content-Type':  'application/json',
-            'Prefer':        'transient',
-        }
-
-        resp = requests.post(url, json=payload, headers=headers, timeout=30)
-        resp.raise_for_status()
-
-        items = resp.json().get('items', [])
-        return str(items[0]['id']) if items else None
-
     def netsuite_create_item_fulfillment(self, so_internal_id):
         """Create an Item Fulfillment from a NetSuite Sales Order (dropship).
 
-        If an Item Fulfillment already exists for this SO (e.g. auto-created by
-        NetSuite when a drop-ship PO receipt was processed), returns the existing
-        ID instead of attempting a duplicate transform that would 400.
-
-        Returns the Item Fulfillment's internal ID string.
+        Returns the new Item Fulfillment's internal ID string.
         """
-        existing_id = self.netsuite_find_existing_item_fulfillment(so_internal_id)
-        if existing_id:
-            _logger.info(
-                'NetSuite: SO %s already has Item Fulfillment %s, skipping transform',
-                so_internal_id, existing_id,
-            )
-            return existing_id
-
         base_url = self._ns_base_url()
         url = (
             f'{base_url}/record/v1/salesOrder'
