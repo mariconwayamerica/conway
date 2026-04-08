@@ -141,7 +141,9 @@ class NetsuiteConnector(models.AbstractModel):
             'Content-Type':  'application/json',
         }
 
-        body = {'memo': memo} if memo else {}
+        body = {'approvalStatus': {'id': '2'}}  # 2 = Approved
+        if memo:
+            body['memo'] = memo
         resp = requests.post(url, json=body, headers=headers, timeout=30)
         resp.raise_for_status()
 
