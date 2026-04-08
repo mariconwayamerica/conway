@@ -169,6 +169,21 @@
                 <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}"/>
             </div>
         </xpath>
+        <!-- Hide Tax ID from purchase order PDFs only -->
+        <xpath expr="//li[@t-if='not forced_vat']" position="replace">
+            <li t-if="not forced_vat and not (o and o._name == 'purchase.order')">
+                <t t-if="company.vat">
+                    <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                    <span t-esc="company.vat"/>
+                </t>
+            </li>
+        </xpath>
+        <xpath expr="//li[@t-else='']" position="replace">
+            <li t-if="forced_vat and not (o and o._name == 'purchase.order')">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                <span t-esc="forced_vat"/>
+            </li>
+        </xpath>
     </template>
 
 </odoo>
