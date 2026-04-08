@@ -141,7 +141,9 @@ class NetsuiteConnector(models.AbstractModel):
             'Content-Type':  'application/json',
         }
 
-        body = {'memo': memo} if memo else {}
+        body = {'approvalStatus': {'id': '2'}}  # 2 = Approved
+        if memo:
+            body['memo'] = memo
         resp = requests.post(url, json=body, headers=headers, timeout=30)
         resp.raise_for_status()
 
@@ -154,15 +156,43 @@ class NetsuiteConnector(models.AbstractModel):
         )
         return bill_id
 
-    def netsuite_create_item_fulfillment(self, po_internal_id):
-        """Create an Item Fulfillment from a NetSuite Purchase Order (dropship).
+    def netsuite_find_so_from_po(self, po_internal_id):
+        """Return the NetSuite internal ID of the Sales Order that created this PO.
+
+        GETs the purchaseOrder record and reads the createdFrom link from the
+        response body.  Returns the string ID, or None if not found.
+        """
+        base_url = self._ns_base_url()
+        url = f'{base_url}/record/v1/purchaseOrder/{po_internal_id}'
+
+        headers = {
+            'Authorization': self._ns_auth_header('GET', url),
+            'Content-Type':  'application/json',
+        }
+
+        resp = requests.get(url, headers=headers, timeout=30)
+        resp.raise_for_status()
+
+        body = resp.json()
+        _logger.debug('NetSuite PO %s record: %s', po_internal_id, body)
+
+        created_from = body.get('createdFrom') or {}
+        so_id = created_from.get('id') if isinstance(created_from, dict) else created_from
+        if not so_id:
+            _logger.warning('NetSuite: PO %s has no createdFrom Sales Order', po_internal_id)
+            return None
+
+        return str(so_id)
+
+    def netsuite_create_item_fulfillment(self, so_internal_id):
+        """Create an Item Fulfillment from a NetSuite Sales Order (dropship).
 
         Returns the new Item Fulfillment's internal ID string.
         """
         base_url = self._ns_base_url()
         url = (
-            f'{base_url}/record/v1/purchaseOrder'
-            f'/{po_internal_id}/!transform/itemFulfillment'
+            f'{base_url}/record/v1/salesOrder'
+            f'/{so_internal_id}/!transform/itemFulfillment'
         )
 
         headers = {
@@ -171,12 +201,14 @@ class NetsuiteConnector(models.AbstractModel):
         }
 
         resp = requests.post(url, json={}, headers=headers, timeout=30)
+        if not resp.ok:
+            _logger.error('NetSuite Item Fulfillment error %s: %s', resp.status_code, resp.text)
         resp.raise_for_status()
 
         location = resp.headers.get('Location', '')
         fulfillment_id = location.rstrip('/').split('/')[-1] if location else 'unknown'
 
         _logger.info(
-            'NetSuite: PO %s transformed to Item Fulfillment %s', po_internal_id, fulfillment_id
+            'NetSuite: SO %s transformed to Item Fulfillment %s', so_internal_id, fulfillment_id
         )
         return fulfillment_id
