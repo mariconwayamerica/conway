@@ -164,7 +164,10 @@ class NetsuiteConnector(models.AbstractModel):
         url = f'{base_url}/query/v1/suiteql'
 
         payload = {
-            'q': f"SELECT createdfrom FROM transaction WHERE id = {int(po_internal_id)} AND type = 'PurchOrd'"
+            'q': (
+                f"SELECT previousdoc FROM TransactionLink "
+                f"WHERE transaction = {int(po_internal_id)} AND linktype = 'Created From'"
+            )
         }
 
         headers = {
@@ -177,7 +180,7 @@ class NetsuiteConnector(models.AbstractModel):
         resp.raise_for_status()
 
         items = resp.json().get('items', [])
-        so_id = items[0].get('createdfrom') if items else None
+        so_id = items[0].get('previousdoc') if items else None
         if not so_id:
             _logger.warning('NetSuite: PO %s has no createdFrom Sales Order', po_internal_id)
             return None
