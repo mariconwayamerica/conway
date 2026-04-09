@@ -84,10 +84,17 @@ class StockPicking(models.Model):
                     so.name, po_id,
                 )
 
-            # 3. Create NetSuite Vendor Bill (with Odoo invoice number in memo)
+            # 3. Create NetSuite Vendor Bill
+            #    tranId  ← Conway invoice number
+            #    memo    ← Odoo Original Customer
             invoice_name = invoices[:1].name if invoices else so.name
+            original_customer = so.x_original_customer or ''
             try:
-                connector.netsuite_transform_po_to_bill(po_id, memo=invoice_name)
+                connector.netsuite_transform_po_to_bill(
+                    po_id,
+                    tranid=invoice_name,
+                    memo=original_customer or None,
+                )
             except Exception:
                 _logger.exception(
                     'NetSuite Vendor Bill failed for SO %s (reference %r)',
