@@ -18,7 +18,7 @@
                     </style>
                     <div class="oe_structure"/>
 
-                    <div class="mt-4">
+                    <div class="mt-5" style="margin-top: 2.5rem !important;"> <!--adjust margin space here-->
                         <t t-set="layout_document_title">
                             <t t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></t>
                             <t t-if="o.state == 'purchase'">Purchase Order #<span t-field="o.name"/></t>
@@ -150,7 +150,7 @@
 
                     <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
                     <t t-set="portal_url" t-value="base_address + '/my/purchase/' + str(o.id) + '#portal_connect_software_modal'"/>
-                    <div t-if="any(u._is_portal() for u in o.partner_id.user_ids) and o._get_edi_builders()" class="text-center">
+                    <div t-if="report_type != 'pdf' and any(u._is_portal() for u in o.partner_id.user_ids) and o._get_edi_builders()" class="text-center">
                         <a t-att-href="portal_url">Connect your software</a> with <t t-out="o.company_id.name"/> to create quotes automatically.
                     </div>
                 </div>
@@ -167,6 +167,19 @@
                 <strong>For Vendor:</strong>
                 <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}"/>
             </div>
+        </xpath>
+        <!-- Hide Tax ID from purchase order PDFs only -->
+        <!-- Use position="attributes" so the element stays in place as an anchor for the t-else sibling -->
+        <xpath expr="//li[@t-if='not forced_vat']" position="attributes">
+            <attribute name="t-if">not forced_vat and not (o and o._name == 'purchase.order')</attribute>
+        </xpath>
+        <!-- Use [last()] to unambiguously target the Tax ID t-else li,
+             since the base template also has a t-else li for the company details block -->
+        <xpath expr="//li[@t-else=''][last()]" position="replace">
+            <li t-if="forced_vat and not (o and o._name == 'purchase.order')">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                <span t-esc="forced_vat"/>
+            </li>
         </xpath>
     </template>
 
