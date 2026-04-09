@@ -15,7 +15,6 @@
                 <div class="page">
                     <style>
                         .o_company_tagline { display: none !important; }
-                        .o_company_vat { display: none !important; }
                     </style>
                     <div class="oe_structure"/>
 
@@ -170,15 +169,13 @@
             </div>
         </xpath>
         <!-- Hide Tax ID from purchase order PDFs only -->
-        <xpath expr="//li[@t-if='not forced_vat']" position="replace">
-            <li t-if="not forced_vat and not (o and o._name == 'purchase.order')">
-                <t t-if="company.vat">
-                    <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                    <span t-esc="company.vat"/>
-                </t>
-            </li>
+        <!-- Use position="attributes" so the element stays in place as an anchor for the t-else sibling -->
+        <xpath expr="//li[@t-if='not forced_vat']" position="attributes">
+            <attribute name="t-if">not forced_vat and not (o and o._name == 'purchase.order')</attribute>
         </xpath>
-        <xpath expr="//li[@t-else='']" position="replace">
+        <!-- Use [last()] to unambiguously target the Tax ID t-else li,
+             since the base template also has a t-else li for the company details block -->
+        <xpath expr="//li[@t-else=''][last()]" position="replace">
             <li t-if="forced_vat and not (o and o._name == 'purchase.order')">
                 <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                 <span t-esc="forced_vat"/>
