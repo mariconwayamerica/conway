@@ -125,8 +125,11 @@ class NetsuiteConnector(models.AbstractModel):
 
         return str(items[0]['id'])
 
-    def netsuite_transform_po_to_bill(self, po_internal_id, memo=None):
+    def netsuite_transform_po_to_bill(self, po_internal_id, memo=None, tranid=None):
         """Transform a NetSuite Purchase Order into a Vendor Bill.
+
+        tranid  → NetSuite Reference Number (tranId field)
+        memo    → NetSuite Memo field
 
         Returns the new Vendor Bill's internal ID string.
         """
@@ -142,6 +145,8 @@ class NetsuiteConnector(models.AbstractModel):
         }
 
         body = {'approvalStatus': {'id': '2'}}  # 2 = Approved
+        if tranid:
+            body['tranId'] = tranid
         if memo:
             body['memo'] = memo
         resp = requests.post(url, json=body, headers=headers, timeout=30)
