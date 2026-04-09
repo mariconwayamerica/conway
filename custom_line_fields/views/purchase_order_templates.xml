@@ -29,5 +29,20 @@
             <td><span t-esc="line.x_general_notes or ''"/></td>
         </xpath>
 
+        <!-- Hide product image -->
+        <xpath expr="//td[@id='product_name']//img" position="replace"/>
+
+        <!-- Hide Taxes column header -->
+        <xpath expr="//th[span[text()='Taxes']]" position="replace"/>
+
+        <!-- Hide Taxes column data cells -->
+        <xpath expr="//td[span[@t-out=\"', '.join(map(lambda x: (x.name), line.tax_ids))\"]]" position="replace"/>
+
+        <!-- Hide Disc.% column header -->
+        <xpath expr="//th[span[text()='Disc.%']]" position="replace"/>
+
+        <!-- Hide Disc.% column data cells -->
+        <xpath expr="//td[div[@t-field='line.discount']]" position="replace"/>
+
     </template>
 </odoo>
