@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime, timedelta
 
 from odoo import api, models
@@ -27,6 +28,7 @@ class PurchaseOrder(models.Model):
         ])
 
         template = self.env.ref('purchase.email_template_edi_purchase', raise_if_not_found=False)
+        report = self.env.ref('purchase.action_report_purchase_order', raise_if_not_found=False)
         if not template:
             return
 
@@ -34,12 +36,27 @@ class PurchaseOrder(models.Model):
             email_to = self._get_email_for_customer(order.x_original_customer)
             if not email_to:
                 continue
+
+            attachment_ids = []
+            if report:
+                pdf_content, _ = report._render_qweb_pdf([order.id])
+                attachment = self.env['ir.attachment'].create({
+                    'name': '%s.pdf' % order.name,
+                    'type': 'binary',
+                    'datas': base64.b64encode(pdf_content),
+                    'res_model': 'purchase.order',
+                    'res_id': order.id,
+                    'mimetype': 'application/pdf',
+                })
+                attachment_ids = [(4, attachment.id)]
+
             template.send_mail(
                 order.id,
                 force_send=True,
                 email_values={
                     'email_to': email_to,
                     'email_cc': False,
+                    'attachment_ids': attachment_ids,
                 },
             )
 
