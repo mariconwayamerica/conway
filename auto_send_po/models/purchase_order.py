@@ -39,7 +39,7 @@ class PurchaseOrder(models.Model):
 
             attachment_ids = []
             if report:
-                pdf_content, _ = report._render_qweb_pdf([order.id])
+                pdf_content, _ = report._render_qweb_pdf('purchase.action_report_purchase_order', res_ids=[order.id])
                 attachment = self.env['ir.attachment'].create({
                     'name': '%s.pdf' % order.name,
                     'type': 'binary',
