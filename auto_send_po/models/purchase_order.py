@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime, timedelta
 
 from odoo import api, models
@@ -26,7 +27,12 @@ class PurchaseOrder(models.Model):
             ('date_approve', '>=', cutoff),
         ])
 
-        template = self.env.ref('purchase.email_template_edi_purchase', raise_if_not_found=False)
+        template = self.env['mail.template'].search([
+            ('name', '=', 'Purchase: Purchase Order'),
+            ('model', '=', 'purchase.order'),
+        ], limit=1)
+        if not template:
+            template = self.env.ref('purchase.email_template_edi_purchase', raise_if_not_found=False)
         if not template:
             return
 
@@ -35,11 +41,37 @@ class PurchaseOrder(models.Model):
             if not email_to:
                 continue
 
-            template.send_mail(
+            # Create mail without sending so we can replace the attachment
+            mail_id = template.send_mail(
                 order.id,
-                force_send=True,
+                force_send=False,
                 email_values={'email_to': email_to, 'email_cc': False},
             )
+            if not mail_id:
+                continue
+
+            mail = self.env['mail.mail'].browse(mail_id)
+
+            # The template attaches the RFQ report by default.
+            # Replace all template attachments with the confirmed PO report.
+            try:
+                pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+                    'purchase.action_report_purchase_order',
+                    res_ids=[order.id],
+                )
+                attachment = self.env['ir.attachment'].create({
+                    'name': f'{order.name}.pdf',
+                    'type': 'binary',
+                    'datas': base64.b64encode(pdf_content),
+                    'res_model': 'purchase.order',
+                    'res_id': order.id,
+                    'mimetype': 'application/pdf',
+                })
+                mail.attachment_ids = [(5, 0, 0), (4, attachment.id)]
+            except Exception:
+                pass  # fall through and send with whatever the template attached
+
+            mail.send()
 
     @api.model
     def _get_email_for_customer(self, customer_name):

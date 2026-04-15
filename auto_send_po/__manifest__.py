@@ -1,6 +1,6 @@
 {
     'name': 'Auto Send PO',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'summary': 'Automatically email confirmed POs daily based on original customer',
     'category': 'Purchase',
     'author': 'Conway',
