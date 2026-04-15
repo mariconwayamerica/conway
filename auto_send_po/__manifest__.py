@@ -6,7 +6,6 @@
     'author': 'Conway',
     'depends': ['purchase', 'custom_so_fields', 'custom_purchase_order_pdf', 'mail'],
     'data': [
-        'data/email_template.xml',
         'data/cron.xml',
     ],
     'installable': True,

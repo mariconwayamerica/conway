@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 4 PM EST = 21:00 UTC -->
+    <!-- 5 PM EST = 22:00 UTC -->
     <record id="ir_cron_auto_send_po" model="ir.cron">
         <field name="name">Auto Send PO by Customer</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -9,6 +9,6 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="active">True</field>
-        <field name="nextcall" eval="(datetime.now().replace(hour=21, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="nextcall" eval="(datetime.now().replace(hour=22, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 </odoo>
