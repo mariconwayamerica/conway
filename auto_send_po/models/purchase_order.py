@@ -27,8 +27,7 @@ class PurchaseOrder(models.Model):
             ('date_approve', '>=', cutoff),
         ])
 
-        template = self.env.ref('purchase.email_template_edi_purchase', raise_if_not_found=False)
-        report = self.env.ref('purchase.action_report_purchase_order', raise_if_not_found=False)
+        template = self.env.ref('auto_send_po.email_template_po_auto_send', raise_if_not_found=False)
         if not template:
             return
 
@@ -37,9 +36,13 @@ class PurchaseOrder(models.Model):
             if not email_to:
                 continue
 
-            attachment_ids = []
-            if report:
-                pdf_content, _ = report._render_qweb_pdf('purchase.action_report_purchase_order', res_ids=[order.id])
+            # Render the custom PO PDF and attach it
+            attachment = None
+            try:
+                pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(
+                    'purchase.action_report_purchase_order',
+                    res_ids=[order.id],
+                )
                 attachment = self.env['ir.attachment'].create({
                     'name': '%s.pdf' % order.name,
                     'type': 'binary',
@@ -48,17 +51,23 @@ class PurchaseOrder(models.Model):
                     'res_id': order.id,
                     'mimetype': 'application/pdf',
                 })
-                attachment_ids = [(4, attachment.id)]
+            except Exception:
+                pass
 
-            template.send_mail(
+            # Create the mail (not yet sent) then attach the PDF before sending
+            mail_id = template.send_mail(
                 order.id,
-                force_send=True,
+                force_send=False,
                 email_values={
                     'email_to': email_to,
                     'email_cc': False,
-                    'attachment_ids': attachment_ids,
                 },
             )
+            if attachment and mail_id:
+                self.env['mail.mail'].browse(mail_id).write({
+                    'attachment_ids': [(4, attachment.id)],
+                })
+            self.env['mail.mail'].browse(mail_id).send()
 
     @api.model
     def _get_email_for_customer(self, customer_name):
