@@ -15,6 +15,7 @@
                 <field name="x_collection" string="Collection" optional="show"/>
                 <field name="x_towel_type" string="Towel Type" optional="show"/>
                 <field name="x_sales_description" string="Sales Description" optional="show"/>
+                <field name="x_ufo_porate" string="UFOPOrate" optional="show"/>
             </xpath>
         </field>
     </record>

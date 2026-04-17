@@ -13,3 +13,4 @@ class AccountMoveLine(models.Model):
     x_collection = fields.Char(string='Collection')
     x_towel_type = fields.Char(string='Towel Type')
     x_sales_description = fields.Char(string='Sales Description')
+    x_ufo_porate = fields.Char(string='UFOPOrate')

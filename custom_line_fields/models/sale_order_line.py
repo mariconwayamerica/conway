@@ -15,6 +15,7 @@ class SaleOrderLine(models.Model):
     x_collection = fields.Char(string='Collection')
     x_towel_type = fields.Char(string='Towel Type')
     x_sales_description = fields.Char(string='Sales Description')
+    x_ufo_porate = fields.Char(string='UFOPOrate')
 
     def _prepare_invoice_line(self, **optional_values):
         vals = super()._prepare_invoice_line(**optional_values)

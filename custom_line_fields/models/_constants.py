@@ -8,4 +8,5 @@ LINE_FIELDS = [
     'x_collection',
     'x_towel_type',
     'x_sales_description',
+    'x_ufo_porate',
 ]
