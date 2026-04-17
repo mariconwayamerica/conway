@@ -4,7 +4,7 @@
     'summary': 'Auto-confirm sales orders on creation; confirm purchase RFQs via daily scheduled action',
     'category': 'Sales/Purchase',
     'author': 'Conway',
-    'depends': ['sale', 'purchase', 'purchase_stock'],
+    'depends': ['sale', 'purchase', 'purchase_stock', 'custom_line_fields'],
     'data': ['data/cron.xml'],
     'installable': True,
     'application': False,
