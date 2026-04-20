@@ -1,7 +1,10 @@
 import base64
+import logging
 from datetime import datetime, timedelta
 
 from odoo import api, models
+
+_logger = logging.getLogger(__name__)
 
 # Maps substring (case-sensitive) to recipient email.
 # Checked in order — first match wins.
@@ -27,6 +30,8 @@ class PurchaseOrder(models.Model):
             ('date_approve', '>=', cutoff),
         ])
 
+        _logger.info('_cron_send_po_by_customer: found %d orders since %s', len(orders), cutoff)
+
         template = self.env['mail.template'].search([
             ('name', '=', 'Purchase: Purchase Order'),
             ('model', '=', 'purchase.order'),
@@ -34,11 +39,17 @@ class PurchaseOrder(models.Model):
         if not template:
             template = self.env.ref('purchase.email_template_edi_purchase', raise_if_not_found=False)
         if not template:
+            _logger.warning('_cron_send_po_by_customer: no email template found, aborting')
             return
 
         for order in orders:
             email_to = self._get_email_for_customer(order.x_original_customer)
             if not email_to:
+                order.message_post(
+                    body=f'Auto Send PO cron: skipped — no email mapping for customer "{order.x_original_customer}"',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_note',
+                )
                 continue
 
             # Create mail without sending so we can replace the attachment
@@ -48,6 +59,11 @@ class PurchaseOrder(models.Model):
                 email_values={'email_to': email_to, 'email_cc': False},
             )
             if not mail_id:
+                order.message_post(
+                    body='Auto Send PO cron: failed to create mail',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_note',
+                )
                 continue
 
             mail = self.env['mail.mail'].browse(mail_id)
@@ -72,6 +88,11 @@ class PurchaseOrder(models.Model):
                 pass  # fall through and send with whatever the template attached
 
             mail.send()
+            order.message_post(
+                body=f'Auto Send PO cron: emailed to {email_to}',
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
 
     @api.model
     def _get_email_for_customer(self, customer_name):
