@@ -71,7 +71,8 @@
                         <thead style="display: table-row-group">
                             <tr>
                                 <th name="th_description" class="text-start"><strong>Item</strong></th>
-                                <th class="text-start"><strong>Item Display Name</strong></th>
+                                <th class="text-start"><strong>Sales Description</strong></th>
+                                <th class="text-start"><strong>Factory Style #</strong></th>
                                 <th class="text-start"><strong>General Notes</strong></th>
                                 <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                                 <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
@@ -87,7 +88,8 @@
                                         <td id="product" class="text-start">
                                             <span t-field="line.name"/>
                                         </td>
-                                        <td class="text-start"><span t-esc="line.x_item_display_name or ''"/></td>
+                                        <td class="text-start"><span t-esc="line.x_sales_description or ''"/></td>
+                                        <td class="text-start"><span t-esc="line.x_factory_style_number or ''"/></td>
                                         <td class="text-start"><span t-esc="line.x_general_notes or ''"/></td>
                                         <td class="text-end">
                                             <span t-field="line.product_qty"/>
