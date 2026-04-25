@@ -6,8 +6,8 @@
         <field name="state">code</field>
         <field name="code">model._cron_confirm_rfq()</field>
         <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
+        <field name="interval_type">hours</field>
         <field name="active">True</field>
-        <field name="nextcall" eval="(datetime.now().replace(hour=19, minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="nextcall" eval="(datetime.now().replace(minute=0, second=0, microsecond=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 </odoo>
