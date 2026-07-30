@@ -15,6 +15,7 @@ _CUSTOMER_EMAIL_MAP = [
     ('TJX', 'jackie.zhang@loftex.com.cn'),
     ('Costco', 'monica.cui@loftex.com.cn'),
     ('Uline', 'victor.guo@loftex.com.cn'),
+    ('SL Home', 'jackie.zhang@loftex.com.cn'),
 ]
 
 
