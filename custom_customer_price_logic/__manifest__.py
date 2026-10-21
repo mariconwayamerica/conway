@@ -1,7 +1,7 @@
 {
     'name': 'Custom Customer Price Logic',
     'version': '19.0.1.0.0',
-    'summary': 'Sets PO unit price based on original customer when PO is created from a SO',
+    'summary': 'DEPRECATED: PO unit price is now set from UFOPOrate (x_ufo_porate) by the auto_confirm_orders cron before confirmation',
     'category': 'Purchase',
     'author': 'Conway',
     'depends': ['purchase_stock', 'custom_so_fields', 'custom_line_fields'],
