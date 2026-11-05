@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_invoice_vendor_bill_report_readonly,invoice.vendor.bill.report.readonly,model_invoice_vendor_bill_report,account.group_account_readonly,1,0,0,0
+access_invoice_vendor_bill_report_invoice,invoice.vendor.bill.report.invoice,model_invoice_vendor_bill_report,account.group_account_invoice,1,0,0,0
